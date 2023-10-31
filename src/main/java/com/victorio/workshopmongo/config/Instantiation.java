@@ -19,27 +19,34 @@ public class Instantiation implements CommandLineRunner {
 
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private PostRepository postRepository;
 
 	@Override
 	public void run(String... arg0) throws Exception {
-		
+
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 
 		userRepository.deleteAll();
 		postRepository.deleteAll();
-		
 
 		User joao = new User(null, "João", "joao@gmail.com");
 		User vitor = new User(null, "Vitor", "vitor@gmail.com");
 		User victorio = new User(null, "Victorio", "victorio@gmail.com");
 		userRepository.saveAll(Arrays.asList(joao, vitor, victorio));
-		
-		Post post1 = new Post(null, sdf.parse("21/03/2018"), "Bora viajar", "Partiu para praia, abraços!", new AuthorDTO(joao));
-		Post post2 = new Post(null, sdf.parse("21/03/2018"), "Bora pedalar", "Meta é pedalar 50km hoje!!", new AuthorDTO(victorio));
+
+		Post post1 = new Post(null, sdf.parse("21/03/2023"), "Bora viajar", "Partiu para praia, abraços!",
+				new AuthorDTO(joao));
+		Post post2 = new Post(null, sdf.parse("10/04/2023"), "Bora pedalar", "Meta é pedalar 50km hoje!!",
+				new AuthorDTO(victorio));
 		postRepository.saveAll(Arrays.asList(post1, post2));
+
+		joao.getPosts().addAll(Arrays.asList(post1));
+		userRepository.save(joao);
+
+		victorio.getPosts().addAll(Arrays.asList(post2));
+		userRepository.save(victorio);
 	}
 }
